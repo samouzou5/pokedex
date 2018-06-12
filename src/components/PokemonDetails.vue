@@ -11,6 +11,7 @@
         :alt="`Pokemon ${pokemon.id}`"
         class="preview"
       />
+      <button class="toggle-favorite" @click="toggleFavorite()">Toggle Favorite</button>
     </template>
     <div v-else class="empty">
       Pokemon not found
@@ -38,6 +39,12 @@ export default {
 
   created () {
     console.log(this.$route.params)
+  },
+
+  methods: {
+    toggleFavorite () {
+      this.$emit('toggle-favorite', this.id)
+    }
   }
 }
 </script>
