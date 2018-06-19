@@ -1,0 +1,7 @@
+#import "./pokemonFragment.gql"
+
+query pokemonList ($input: PokemonsInput!) {
+  pokemons (input: $input) {
+    ...pokemon
+  }
+}

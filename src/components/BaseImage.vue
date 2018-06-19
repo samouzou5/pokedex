@@ -1,41 +1,47 @@
 <template>
-  <div class="base-image"
+  <div
+    class="base-image"
     :class="{
-        loaded
-      }">
-    <img :src="src" alt="Image" class="image" @load="onLoad" />
+      loaded
+    }"
+  >
+    <img
+      v-bind="$attrs"
+      :src="src"
+      class="image"
+      @load="onLoad"
+    >
     <transition name="fade">
-      <BaseLoader v-if="!loaded" />
+      <BaseLoader v-if="!loaded"/>
     </transition>
   </div>
 </template>
 
 <script>
-const isLoaded = new Map()
-
+// Prevent showing loading animation if was already loaded before
+const alreadyLoaded = new Map()
 export default {
+  inheritAttrs: false,
   props: {
     src: {
       type: String,
       required: true
     }
   },
-
   data () {
     return {
-      loaded: isLoaded.get(this.src)
+      loaded: alreadyLoaded.get(this.src)
     }
   },
-
   methods: {
     onLoad () {
       this.loaded = true
-      isLoaded.set(this.src, true)
+      alreadyLoaded.set(this.src, true)
     }
   }
-
 }
 </script>
+
 <style lang="stylus" scoped>
 .base-image
   position relative

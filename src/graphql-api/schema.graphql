@@ -10,13 +10,31 @@ enum CacheControlScope {
   PRIVATE
 }
 
+#This is a pokemon
+type Pokemon {
+  id: ID!
+  name: String!
+  #Health points
+  hp: Int,
+  attack: Int,
+  defense: Int,
+  types: [PokemonType]!
+}
 
+type PokemonType {
+  id: ID!
+}
 
+input PokemonsInput {
+  page: Int!
+}
 
 type Query {
   # Test query with a parameter
   hello(name: String): String!
 
+  pokemons(input: PokemonsInput!):[Pokemon]!
+  pokemon(id:ID!): Pokemon
 }
 
 type Mutation {

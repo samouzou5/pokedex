@@ -5,11 +5,18 @@
       }"
 >
  <div class="name"> {{pokemon.name}}</div>
-  <BaseImage :src="pokemon.image" alt="Image"/>
+  <PokemonImage
+      :pokemon="pokemon"
+      class="preview"
+    />
 </router-link>
 </template>
 <script>
+import PokemonImage from './PokemonImage.vue'
 export default {
+  components: {
+    PokemonImage
+  },
   props: {
     pokemon: {
       type: Object,

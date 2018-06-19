@@ -2,49 +2,89 @@
   <div class="pokemon-list">
     <h1>Pokedex</h1>
     <div class="toolbar">
-      <input
-       v-model="search"
-       placeholder="Filter..."
-      >
+      <input v-model="search" placeholder="Filter...">
     </div>
-    <div class="pokemons">
-    <PokemonListItem
-    v-for="pokemon of filteredPokemons"
-    :key="pokemon.id"
-    :pokemon="pokemon"
-    />
-    </div>
+
+    <BaseLoader v-if="!pokemons"/>
+
+    <template v-else>
+      <div class="pokemons">
+        <PokemonListItem
+          v-for="pokemon of displayedPokemons"
+          :key="pokemon.id"
+          :pokemon="pokemon"
+        />
+      </div>
+
+      <div class="bottom-actions">
+        <button  @click="loadMorePokemons()">Load more</button>
+      </div>
+    </template>
   </div>
 </template>
 
 <script>
-import pokemons from '@/assets/pokemons.json'
 import PokemonListItem from './PokemonListItem'
+import POKEMONS from '../graphql/pokemons.gql'
+
+let page = 0
+
 export default {
   components: {
     PokemonListItem
   },
   data () {
     return {
-      pokemons,
       search: ''
     }
   },
-  computed: {
-    filteredPokemons () {
-      if (!this.search) {
-        return this.pokemons
+  apollo: {
+    pokemons: {
+      query: POKEMONS,
+      variables: {
+        input: {
+          page: 0
+        }
       }
-      const lowerCaseSearch = this.search.toLowerCase()
-      return this.pokemons.filter(
-        pokemon => pokemon.name.toLowerCase().indexOf(lowerCaseSearch) !== -1
-      )
+    }
+  },
+  computed: {
+    displayedPokemons () {
+      if (this.search) {
+        const regex = new RegExp(this.search, 'i')
+        return this.pokemons.filter(
+          pokemon => pokemon.name.match(regex)
+        )
+      }
+      return this.pokemons
+    }
+  },
+  methods: {
+    loadMorePokemons () {
+      page++
+
+      this.$apollo.queries.pokemons.fetchMore({
+        variables: {
+          input: {
+            page
+          }
+        },
+        updateQuery: (previousResult, { fetchMoreResult }) => {
+          const newPokemons = fetchMoreResult.pokemons
+          return {
+            pokemons: [
+              ...previousResult.pokemons, ...newPokemons
+            ]
+          }
+        }
+      })
     }
   }
 }
 </script>
+
 <style lang="stylus" scoped>
-@import '~@/style/imports.styl'
+@import '~@/style/imports'
 .pokemon-list
   margin $padding
 .pokemons
