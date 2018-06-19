@@ -7,7 +7,8 @@ module.exports = {
   JSON: GraphQLJSON,
 
   Pokemon: {
-    types: (pokemon, args, context) => pokemons.getTypes(pokemon, context)
+    types: (pokemon, args, context) => pokemons.getTypes(pokemon, context),
+    favorite: (pokemon, args, context) => pokemons.isFavorite(pokemon, context)
   },
   Query: {
     hello: (root, { name }) => `Hello ${name || 'World'}!`,
@@ -20,7 +21,8 @@ module.exports = {
       const message = 'My mutation completed!'
       context.pubsub.publish('hey', { mySub: message })
       return message
-    }
+    },
+    toggleFavoritePokemon: (root, { input }, context) => pokemons.toggleFavorite(input, context)
 
   },
 

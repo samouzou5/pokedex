@@ -1,0 +1,8 @@
+#import "./pokemonFragment"
+
+mutation toggleFavorite
+($input:ToggleFavoritePokemonInput!) {
+  toggleFavoritePokemon (input: $input) {
+    ...pokemon
+  }
+}

@@ -17,3 +17,19 @@ exports.getTypes = (pokemon, context) => {
   }
   return list
 }
+
+/* Favorite management */
+
+const favoritePokemons = new Map()
+exports.isFavorite = ({ id }, context) => {
+  return favoritePokemons.has(id)
+}
+
+exports.toggleFavorite = ({ id }, context) => {
+  if (favoritePokemons.has(id)) {
+    favoritePokemons.delete(id)
+  } else {
+    favoritePokemons.add(id)
+  }
+  return exports.find({ id }, context)
+}

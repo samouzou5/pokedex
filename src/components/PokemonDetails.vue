@@ -10,6 +10,10 @@
 
       <div class="name">{{ pokemon.name }}</div>
 
+      <div>
+        Favorite: {{ pokemon.favorite }}
+      </div>
+
       <div class="types">
         <div
           v-for="type of pokemon.types"
@@ -38,6 +42,7 @@
 <script>
 import PokemonImage from './PokemonImage.vue'
 import POKEMON from '../graphql/pokemon.gql'
+import TOGGLEFAVORITE from '../graphql/toggleFavoritePokemon'
 export default {
   name: 'PokemonDetails',
   components: {
@@ -64,7 +69,14 @@ export default {
   },
   methods: {
     toggleFavorite () {
-      this.$emit('toggle-favorite', this.id)
+      this.$apollo.mutate({
+        mutation: TOGGLEFAVORITE,
+        variables: {
+          input: {
+            id: this.id
+          }
+        }
+      })
     }
   }
 }

@@ -19,6 +19,7 @@ type Pokemon {
   attack: Int,
   defense: Int,
   types: [PokemonType]!
+  favorite: Boolean!
 }
 
 type PokemonType {
@@ -27,6 +28,10 @@ type PokemonType {
 
 input PokemonsInput {
   page: Int!
+}
+
+input ToggleFavoritePokemonInput {
+  pokemonId: ID!
 }
 
 type Query {
@@ -39,7 +44,7 @@ type Query {
 
 type Mutation {
   myMutation: String!
-
+  toggleFavoritePokemon(input:ToggleFavoritePokemonInput!): Pokemon!
 }
 
 type Subscription {
